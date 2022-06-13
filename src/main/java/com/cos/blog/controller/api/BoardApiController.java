@@ -28,6 +28,11 @@ public class BoardApiController {
         boardService.글삭제하기(id);
         return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
     }
+    @PutMapping("api/board/{id}")
+    public ResponseDto<Integer> update(@PathVariable int id,@RequestBody Board board) {
+        boardService.글수정하기(id,board);
+        return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
+    }
 
 //    @PostMapping("/api/user/login")
 //    public ResponseDto<Integer> login(@RequestBody User user,HttpSession session) {
