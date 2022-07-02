@@ -8,6 +8,7 @@ import com.cos.blog.model.User;
 import com.cos.blog.repository.BoardRepository;
 import com.cos.blog.repository.ReplyRepository;
 import com.cos.blog.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,16 +21,17 @@ import java.util.List;
 
 //스프링이 컴포넌트 스캔을 통해 Bean에 등록을 해줌. IoC를 해준다.
 @Service
+@RequiredArgsConstructor
 public class BoardService {
 
-    @Autowired
-    private BoardRepository boardRepository;
+    private final BoardRepository boardRepository;
+    private final ReplyRepository replyRepository;
 
-    @Autowired
-    private ReplyRepository replyRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+//    @Autowired
+//    private BoardRepository boardRepository;
+//
+//    @Autowired
+//    private ReplyRepository replyRepository;
 
     @Transactional
     public void 글쓰기(Board board,User user) { //title,content
@@ -70,26 +72,28 @@ public class BoardService {
     @Transactional
     public void 댓글쓰기(ReplySaveRequestDto replySaveRequestDto) {
 
-        User user = userRepository.findById(replySaveRequestDto.getUserId())
-                .orElseThrow(()->{
-                    return new IllegalArgumentException("댓글 쓰기 실패 : 유저 Id를 찾을 수 없습니다.");
-                }); //영속화 완료
-
-        Board board = boardRepository.findById(replySaveRequestDto.getBoardId())
-                .orElseThrow(()->{
-                    return new IllegalArgumentException("댓글 쓰기 실패 : 게시글 Id를 찾을 수 없습니다.");
-                }); //영속화 완료
-
-        Reply reply = Reply.builder()
-                    .user(user)
-                    .board(board)
-                    .content(replySaveRequestDto.getContent())
-                    .build();
+//        User user = userRepository.findById(replySaveRequestDto.getUserId())
+//                .orElseThrow(()->{
+//                    return new IllegalArgumentException("댓글 쓰기 실패 : 유저 Id를 찾을 수 없습니다.");
+//                }); //영속화 완료
+//
+//        Board board = boardRepository.findById(replySaveRequestDto.getBoardId())
+//                .orElseThrow(()->{
+//                    return new IllegalArgumentException("댓글 쓰기 실패 : 게시글 Id를 찾을 수 없습니다.");
+//                }); //영속화 완료
+//
+//        Reply reply = Reply.builder()
+//                    .user(user)
+//                    .board(board)
+//                    .content(replySaveRequestDto.getContent())
+//                    .build();
 
 //        Reply reply = new Reply();
 //        reply.update(user,board, replySaveRequestDto.getContent());
 
-        replyRepository.save(reply);
+//        replyRepository.save(reply);
+        int result = replyRepository.mSave(replySaveRequestDto.getUserId(), replySaveRequestDto.getBoardId(), replySaveRequestDto.getContent());
+        System.out.println("BoardService :" + result);
     }
 
 
